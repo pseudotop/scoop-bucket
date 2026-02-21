@@ -1,0 +1,51 @@
+name: Update Manifest
+
+on:
+  repository_dispatch:
+    types: [update-manifest]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update oneshim manifest
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+          TAG="${{ github.event.client_payload.tag }}"
+          WIN_SHA="${{ github.event.client_payload.windows_x64_sha256 }}"
+
+          cat > oneshim.json << MANIFEST
+          {
+            "version": "${VERSION}",
+            "description": "AI-assisted office productivity desktop client",
+            "homepage": "https://github.com/pseudotop/oneshim-client",
+            "license": "Apache-2.0",
+            "architecture": {
+              "64bit": {
+                "url": "https://github.com/pseudotop/oneshim-client/releases/download/${TAG}/oneshim-windows-x64.zip",
+                "hash": "${WIN_SHA}"
+              }
+            },
+            "bin": "oneshim.exe",
+            "checkver": {
+              "github": "https://github.com/pseudotop/oneshim-client"
+            },
+            "autoupdate": {
+              "architecture": {
+                "64bit": {
+                  "url": "https://github.com/pseudotop/oneshim-client/releases/download/v\$version/oneshim-windows-x64.zip"
+                }
+              }
+            }
+          }
+          MANIFEST
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add oneshim.json
+          git commit -m "update: oneshim ${{ github.event.client_payload.version }}"
+          git push
