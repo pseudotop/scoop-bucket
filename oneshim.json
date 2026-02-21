@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "description": "AI-assisted office productivity desktop client",
+  "homepage": "https://github.com/pseudotop/oneshim-client",
+  "license": "Apache-2.0",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/pseudotop/oneshim-client/releases/download/v0.0.1/oneshim-windows-x64.zip",
+      "hash": "7eaeb1832ab5721b0e47fcf6fc98605097f2ad1bda971639bb6d20757735c55f"
+    }
+  },
+  "bin": "oneshim.exe",
+  "checkver": {
+    "github": "https://github.com/pseudotop/oneshim-client"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/pseudotop/oneshim-client/releases/download/v$version/oneshim-windows-x64.zip"
+      }
+    }
+  }
+}
